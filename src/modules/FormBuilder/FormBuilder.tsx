@@ -67,7 +67,6 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 const { checked } = event.target as HTMLInputElement;
                 newData = { ...prevData, [name]: checked };
             } else if (event.target instanceof HTMLSelectElement) {
-                //If we need to send the option
                 //const selectedValue = sortingtOptions.find(option => option.id === value);
 
                 newData = { ...prevData, [name]: value };
@@ -181,7 +180,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                     label="Order"
                     options={sortingtOptions}
                     id={controlConfig.id}
-                    value={formData[controlConfig.id] as SelectOption}
+                    value={((formData[controlConfig.id]) as SelectOption).id}
                 />
             </div>
         } else if (controlConfig.type === 'textarea') {

@@ -14,7 +14,7 @@ const Select = ({ id, value, options, onChange, label, name, disabled }: OwnProp
                     {label}
                 </label>
             )}
-            <select disabled={disabled} className='select' name={name} id={id} value={value?.id || ''} onChange={handleSelectChange}>
+            <select disabled={disabled} className='select' name={name} id={id} value={value} onChange={handleSelectChange}>
                 {options.map((option) => (
                     <option key={option.id} value={option.id}>
                         {option.label}
@@ -28,7 +28,7 @@ const Select = ({ id, value, options, onChange, label, name, disabled }: OwnProp
 
 interface OwnProps {
     id: string;
-    value: SelectOption | null;
+    value: string;
     label?: ReactNode;
     options: SelectOption[];
     name: string;
