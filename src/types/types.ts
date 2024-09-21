@@ -17,3 +17,8 @@ export type FormErrors = {
     label?: string;
     choices?: string;
 }
+
+export type FormBuilderConfig = {
+    type: 'input' | 'checkbox' | 'select' | 'textarea';
+    id: keyof typeof formIds;
+};

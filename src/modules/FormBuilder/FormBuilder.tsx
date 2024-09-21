@@ -1,12 +1,13 @@
-import { useEffect, useState, ChangeEvent, useCallback } from 'react';
+import { useEffect, useState, ChangeEvent, useCallback, ReactNode, Fragment } from 'react';
 import './FormBuilder.css';
 import Input from '../../components/Input/Input';
 import Select from '../../components/Select/Select';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import TextArea from '../../components/TextArea/TextArea';
 import Button from '../../components/Button/Button';
-import { SelectOption, FormData, FormErrors } from '../../types/types';
+import { SelectOption, FormData, FormErrors, FormBuilderConfig } from '../../types/types';
 import { formIds, localStorageKeys } from '../../constants/appConstants';
+import { form_builder_config } from '../../constants/formBuilderConfig';
 import { setItemFromLocalStorage } from '../../utils/utils';
 import fieldService from '../../services/formService';
 
@@ -70,6 +71,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 newData = { ...prevData, [name]: selectedValue };
             } else if (event.target instanceof HTMLTextAreaElement) {
                 const choices = value.split('\n');
+
                 newData = { ...prevData, [name]: [...choices] };
             } else {
                 newData = { ...prevData, [name]: value };
@@ -135,77 +137,78 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
         setFormData(data);
     }, [data]);
 
+    const renderControl = (controlConfig: FormBuilderConfig): ReactNode => {
+        let control = null
+
+        if (controlConfig.type === 'input') {
+            control = <div className="form-group">
+                <Input
+                    disabled={loading}
+                    onChange={handleChange}
+                    value={formData[controlConfig.id] as string}
+                    label="Label"
+                    type="text"
+                    id={controlConfig.id}
+                    name={controlConfig.id}
+                    error={(errors && (controlConfig.id === formIds.label)) ? errors.label : ''}
+                />
+            </div>
+        } else if (controlConfig.type === 'checkbox') {
+            control = <div className="form-group checkbox-group">
+                <div className='checkbox-group-label'>
+                    Type
+                </div>
+                <div className='checkbox-group-control'>
+                    <span className='multi-select-separator'>Multi-select</span>
+                    <Checkbox
+                        disabled={loading}
+                        onChange={handleChange}
+                        id={controlConfig.id}
+                        name={controlConfig.id}
+                        checked={formData[controlConfig.id] as boolean}
+                        label="A value is required"
+                    />
+                </div>
+            </div>
+        } else if (controlConfig.type === 'select') {
+            control = <div className="form-group">
+                <Select
+                    disabled={loading}
+                    name={controlConfig.id}
+                    onChange={handleChange}
+                    label="Order"
+                    options={sortingtOptions}
+                    id={controlConfig.id}
+                    value={formData[controlConfig.id] as SelectOption}
+                />
+            </div>
+        } else if (controlConfig.type === 'textarea') {
+            control = <div className="form-group">
+                <TextArea
+                    disabled={loading}
+                    id={controlConfig.id}
+                    name={controlConfig.id}
+                    value={formData.choices.join('\n')} // Join array into a string for the TextArea
+                    onChange={handleChange}
+                    label="Choices"
+                    placeholder="Enter choices, one per line"
+                    error={errors.choices ? errors.choices : ''}
+                />
+            </div>
+        }
+        return control;
+    }
+
     return (
         <div className='form-builder-wrapper'>
             <h3 className='form-builder-title'>Form Builder</h3>
             <div className='form-builder-container'>
                 <form className="form">
-                    <div className="form-group">
-                        <Input
-                            disabled={loading}
-                            onChange={handleChange}
-                            value={formData[formIds.label]}
-                            label="Label"
-                            type="text"
-                            id={formIds.label}
-                            name={formIds.label}
-                            error={errors.label ? errors.label : ''}
-                        />
-                    </div>
-
-                    <div className="form-group checkbox-group">
-                        <div className='checkbox-group-label'>
-                            Type
-                        </div>
-                        <div className='checkbox-group-control'>
-                            <span className='multi-select-separator'>Multi-select</span>
-                            <Checkbox
-                                disabled={loading}
-                                onChange={handleChange}
-                                id={formIds.field_required}
-                                name={formIds.field_required}
-                                checked={formData[formIds.field_required]}
-                                label="A value is required"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <Input
-                            disabled={loading}
-                            onChange={handleChange}
-                            value={formData[formIds.defaultValue]}
-                            label="Default Value"
-                            type="text"
-                            id={formIds.defaultValue}
-                            name={formIds.defaultValue}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <TextArea
-                            disabled={loading}
-                            id="choices"
-                            name="choices"
-                            value={formData.choices.join('\n')} // Join array into a string for the TextArea
-                            onChange={handleChange}
-                            label="Choices"
-                            placeholder="Enter choices, one per line"
-                            error={errors.choices ? errors.choices : ''} // Pass string error to TextArea
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <Select
-                            disabled={loading}
-                            name={formIds.displayAlpha}
-                            onChange={handleChange}
-                            label="Order"
-                            options={sortingtOptions}
-                            id={formIds.displayAlpha}
-                            value={formData[formIds.displayAlpha]}
-                        />
-                    </div>
+                    {form_builder_config.map((control: FormBuilderConfig) => (
+                        <Fragment key={control.id}>
+                            {renderControl(control)}
+                        </Fragment>
+                    ))}
 
                     <div className='button-group'>
                         <Button

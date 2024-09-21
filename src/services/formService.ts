@@ -1,4 +1,4 @@
-import { api_endponts } from "./apiEndpoints";
+import { api_endponts } from "../constants/apiEndpoints";
 
 
 const fieldService =  {
