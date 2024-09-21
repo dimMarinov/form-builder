@@ -28,22 +28,22 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
     useEffect(() => {
         const validateField = () => {
             const newErrors: FormErrors = {};
-    
+
             if (!formData[formIds.label]) {
                 newErrors.label = 'Label is required';
             }
-    
+
             const choices = formData.choices;
             const uniqueChoices = new Set(choices);
-    
+
             if (choices.length !== uniqueChoices.size) {
                 newErrors.choices = 'Duplicate choices are not allowed';
             }
-    
+
             if (choices.length > 50) {
                 newErrors.choices = 'You cannot have more than 50 choices';
             }
-    
+
             if (Object.keys(newErrors).length > 0) {
                 setDisableSubmit(true);
                 setErrors(newErrors);
@@ -52,7 +52,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 setErrors({});
             }
         };
-    
+
         validateField();
     }, [formData]);
 
@@ -115,11 +115,11 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
         try {
             const response = await fieldService.saveField(formData);
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-    
+
             const data = await response.json();
             console.log("Save successful:", data);
         } catch (error) {
@@ -142,6 +142,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 <form className="form">
                     <div className="form-group">
                         <Input
+                            disabled={loading}
                             onChange={handleChange}
                             value={formData[formIds.label]}
                             label="Label"
@@ -159,6 +160,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                         <div className='checkbox-group-control'>
                             <span className='multi-select-separator'>Multi-select</span>
                             <Checkbox
+                                disabled={loading}
                                 onChange={handleChange}
                                 id={formIds.field_required}
                                 name={formIds.field_required}
@@ -170,6 +172,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
                     <div className="form-group">
                         <Input
+                            disabled={loading}
                             onChange={handleChange}
                             value={formData[formIds.defaultValue]}
                             label="Default Value"
@@ -181,6 +184,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
                     <div className="form-group">
                         <TextArea
+                            disabled={loading}
                             id="choices"
                             name="choices"
                             value={formData.choices.join('\n')} // Join array into a string for the TextArea
@@ -193,6 +197,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
                     <div className="form-group">
                         <Select
+                            disabled={loading}
                             name={formIds.displayAlpha}
                             onChange={handleChange}
                             label="Order"
@@ -204,7 +209,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
                     <div className='button-group'>
                         <Button
-                            onClick={handleSubmit} 
+                            onClick={handleSubmit}
                             type="primary"
                             title="Submit Form"
                             disabled={disableSubmit}

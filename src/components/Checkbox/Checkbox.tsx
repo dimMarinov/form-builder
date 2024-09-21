@@ -1,6 +1,6 @@
 import './Checkbox.css';
 
-const Checkbox = ({ id, name, checked, label, onChange }: OwnProps): JSX.Element => {
+const Checkbox = ({ id, name, checked, label, onChange, disabled }: OwnProps): JSX.Element => {
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         onChange?.(event);
     };
@@ -13,6 +13,7 @@ const Checkbox = ({ id, name, checked, label, onChange }: OwnProps): JSX.Element
                 name={name}
                 checked={checked}
                 onChange={handleCheckboxChange}
+                disabled={disabled}
             />
             <label className='label' htmlFor={id}>{label}</label>
         </div>
@@ -24,6 +25,7 @@ interface OwnProps {
     name: string;
     checked: boolean;
     label: string;
+    disabled?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; 
 }
 

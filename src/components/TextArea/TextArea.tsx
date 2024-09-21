@@ -9,6 +9,7 @@ const TextArea = ({
     label,
     placeholder,
     error,
+    disabled
 }: OwnProps): JSX.Element => {
     const handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         onChange?.(event);
@@ -19,6 +20,7 @@ const TextArea = ({
             {label && <label htmlFor={id}>{label}</label>}
             <div className='input-wrapper'>
                 <textarea
+                disabled={disabled}
                     id={id}
                     name={name}
                     value={value}
@@ -39,6 +41,7 @@ interface OwnProps {
     onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     placeholder?: string;
     error?: string;
+    disabled?: boolean;
 }
 
 export default TextArea;

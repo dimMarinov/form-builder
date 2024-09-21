@@ -2,7 +2,7 @@ import { ChangeEvent, ReactNode } from 'react';
 import { SelectOption } from '../../types/types';
 import './Select.css';
 
-const Select = ({ id, value, options, onChange, label, name }: OwnProps): JSX.Element => {
+const Select = ({ id, value, options, onChange, label, name, disabled }: OwnProps): JSX.Element => {
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
         onChange?.(event);
     };
@@ -14,7 +14,7 @@ const Select = ({ id, value, options, onChange, label, name }: OwnProps): JSX.El
                     {label}
                 </label>
             )}
-            <select className='select' name={name} id={id} value={value?.id || ''} onChange={handleSelectChange}>
+            <select disabled={disabled} className='select' name={name} id={id} value={value?.id || ''} onChange={handleSelectChange}>
                 {options.map((option) => (
                     <option key={option.id} value={option.id}>
                         {option.label}
@@ -32,6 +32,7 @@ interface OwnProps {
     label?: ReactNode;
     options: SelectOption[];
     name: string;
+    disabled?: boolean;
     onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
