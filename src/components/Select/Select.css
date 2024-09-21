@@ -1,5 +1,12 @@
 .select-container {
     display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 480px) {
+    .select-container {
+        flex-direction: row;
+    }
 }
 
 .label-select {
