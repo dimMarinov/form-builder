@@ -1,0 +1,7 @@
+.checkbox-container {
+    display: flex;
+}
+
+.label {
+    flex-basis: unset;
+}

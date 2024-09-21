@@ -1,0 +1,12 @@
+.select-container {
+    display: flex;
+}
+
+.label-select {
+    flex-basis: 30%;
+    display: flex;
+}
+
+.select {
+    flex-basis: 70%;
+}
