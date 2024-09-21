@@ -6,5 +6,5 @@ export const form_builder_config: FormBuilderConfig[] = [
     { type: 'checkbox', id: formIds.field_required },
     { type: 'input', id: formIds.defaultValue },
     { type: 'textarea', id: formIds.choices },
-    { type: 'select', id: formIds.displayAlpha },
+    { type: 'select', id: formIds.displayAlpha }
 ];

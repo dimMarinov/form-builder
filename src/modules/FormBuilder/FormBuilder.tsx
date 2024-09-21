@@ -67,8 +67,10 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 const { checked } = event.target as HTMLInputElement;
                 newData = { ...prevData, [name]: checked };
             } else if (event.target instanceof HTMLSelectElement) {
-                const selectedValue = sortingtOptions.find(option => option.id === value);
-                newData = { ...prevData, [name]: selectedValue };
+                //If we need to send the option
+                //const selectedValue = sortingtOptions.find(option => option.id === value);
+
+                newData = { ...prevData, [name]: value };
             } else if (event.target instanceof HTMLTextAreaElement) {
                 const choices = value.split('\n');
 

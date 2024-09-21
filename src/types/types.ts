@@ -14,8 +14,8 @@ export type FormData = {
 }
 
 export type FormErrors = {
-    label?: string;
-    choices?: string;
+    [formIds.label]?: string;
+    [formIds.choices]?: string;
 }
 
 export type FormBuilderConfig = {
