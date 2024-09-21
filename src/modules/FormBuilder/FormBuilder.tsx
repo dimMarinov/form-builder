@@ -18,7 +18,10 @@ interface OwnProps {
 
 const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
     const [formData, setFormData] = useState(data);
-    const [errors, setErrors] = useState<FormErrors>({});
+    const [errors, setErrors] = useState<FormErrors>({
+        [formIds.label]: '',
+        [formIds.choices]: ''
+    });
     const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
