@@ -21,7 +21,7 @@ const initialValuesOfForm = {
 };
 
 function App() {
-  const [formData, setFormData] = useState<FormData>(initialValuesOfForm)
+  const [formData, setFormData] = useState<FormData>()
 
   useEffect(() => {
     const savedDataFromStorage = JSON.parse(getItemFromLocalStorage(localStorageKeys.formData) ?? 'null');
@@ -42,7 +42,7 @@ function App() {
   }, []);
 
   return (
-    <FormBuilder sortingtOptions={sortingtOptions} data={formData}/>
+    <FormBuilder sortingtOptions={sortingtOptions} data={formData ?? initialValuesOfForm}/>
   )
 }
 

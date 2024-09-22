@@ -29,24 +29,29 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
         setFormData(data);
     }, [data]);
 
+    const validateFields = (formData: FormData) => {
+        const newErrors: FormErrors = {};
+
+        if (!formData[formIds.label]) {
+            newErrors.label = 'Label is required';
+        }
+
+        const choices = formData.choices;
+        const uniqueChoices = new Set(choices);
+        if (choices.length !== uniqueChoices.size) {
+            newErrors.choices = 'Duplicate choices are not allowed';
+        }
+
+        if (choices.length > 50) {
+            newErrors.choices = 'You cannot have more than 50 choices';
+        }
+
+        return newErrors;
+    }
+
     useEffect(() => {
         const validateField = () => {
-            const newErrors: FormErrors = {};
-
-            if (!formData[formIds.label]) {
-                newErrors.label = 'Label is required';
-            }
-
-            const choices = formData.choices;
-            const uniqueChoices = new Set(choices);
-
-            if (choices.length !== uniqueChoices.size) {
-                newErrors.choices = 'Duplicate choices are not allowed';
-            }
-
-            if (choices.length > 50) {
-                newErrors.choices = 'You cannot have more than 50 choices';
-            }
+            const newErrors: FormErrors = validateFields(formData);
 
             if (Object.keys(newErrors).length > 0) {
                 setDisableSubmit(true);
@@ -70,6 +75,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 const { checked } = event.target as HTMLInputElement;
                 newData = { ...prevData, [name]: checked };
             } else if (event.target instanceof HTMLSelectElement) {
+                //if we need to pass the whole value
                 //const selectedValue = sortingtOptions.find(option => option.id === value);
 
                 newData = { ...prevData, [name]: value };
@@ -80,6 +86,8 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
             } else {
                 newData = { ...prevData, [name]: value };
             }
+            //we could add  debounce funcitonality for example here
+            //also we could make it when the user clicks outside of the form
             setItemToLocalStorage(localStorageKeys.formData, JSON.stringify(newData));
             return newData;
         });
@@ -87,26 +95,13 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
 
     const handleSubmit = async () => {
         setLoading(true);
-        const newErrors: FormErrors = {};
-
-        if (!formData[formIds.label]) {
-            newErrors.label = 'Label is required';
-        }
-
-        const choices = formData.choices;
-        const uniqueChoices = new Set(choices);
-        if (choices.length !== uniqueChoices.size) {
-            newErrors.choices = 'Duplicate choices are not allowed';
-        }
-
-        if (choices.length > 50) {
-            newErrors.choices = 'You cannot have more than 50 choices';
-        }
+        const newErrors: FormErrors = validateFields(formData);
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
+        const choices = formData.choices;
 
         const saveData = {
             ...formData,
