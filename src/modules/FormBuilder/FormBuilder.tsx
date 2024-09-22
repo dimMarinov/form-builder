@@ -8,7 +8,7 @@ import Button from '../../components/Button/Button';
 import { SelectOption, FormData, FormErrors, FormBuilderConfig } from '../../types/types';
 import { formIds, localStorageKeys } from '../../constants/appConstants';
 import { form_builder_config } from '../../constants/formBuilderConfig';
-import { setItemFromLocalStorage } from '../../utils/utils';
+import { setItemToLocalStorage, removeFromLocalStorage } from '../../utils/utils';
 import fieldService from '../../services/formService';
 
 interface OwnProps {
@@ -17,7 +17,7 @@ interface OwnProps {
 }
 
 const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
-    const [formData, setFormData] = useState(data);
+    const [formData, setFormData] = useState<FormData>(data);
     const [errors, setErrors] = useState<FormErrors>({
         [formIds.label]: '',
         [formIds.choices]: ''
@@ -80,9 +80,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
             } else {
                 newData = { ...prevData, [name]: value };
             }
-
-            setItemFromLocalStorage(localStorageKeys.formData, JSON.stringify(newData));
-
+            setItemToLocalStorage(localStorageKeys.formData, JSON.stringify(newData));
             return newData;
         });
     };
@@ -125,7 +123,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            removeFromLocalStorage(localStorageKeys.formData)
             const data = await response.json();
             console.log("Save successful:", data);
         } catch (error) {
@@ -137,7 +135,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
     };
 
     const handleCancel = useCallback(() => {
-        setItemFromLocalStorage(localStorageKeys.formData, JSON.stringify(data));
+        setItemToLocalStorage(localStorageKeys.formData, JSON.stringify(data));
         setFormData(data);
     }, [data]);
 
@@ -183,7 +181,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                     label="Order"
                     options={sortingtOptions}
                     id={controlConfig.id}
-                    value={((formData[controlConfig.id]) as SelectOption).id}
+                    value={formData[controlConfig.id] as string}
                 />
             </div>
         } else if (controlConfig.type === 'textarea') {

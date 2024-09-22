@@ -17,7 +17,7 @@ const initialValuesOfForm = {
   [formIds.field_required]: false,
   [formIds.defaultValue]: '',
   [formIds.choices]: [],
-  [formIds.displayAlpha]: sortingtOptions[0]
+  [formIds.displayAlpha]: sortingtOptions[0].id
 };
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
         [formIds.field_required]: apiRes?.required ?? initialValuesOfForm[formIds.field_required],
         [formIds.defaultValue]: apiRes?.default ?? initialValuesOfForm[formIds.defaultValue],
         [formIds.choices]: apiRes?.choices ?? initialValuesOfForm[formIds.choices],
-        [formIds.displayAlpha]:  (apiRes?.displayAlpha ? sortingtOptions[0] : sortingtOptions[1]) ?? initialValuesOfForm[formIds.displayAlpha]
+        [formIds.displayAlpha]:  (apiRes?.displayAlpha ? sortingtOptions[0].id : sortingtOptions[1].id) ?? initialValuesOfForm[formIds.displayAlpha]
       }
       setFormData(stateData)
     }

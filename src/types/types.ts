@@ -10,7 +10,7 @@ export type FormData = {
     [formIds.field_required]: boolean
     [formIds.defaultValue]: string
     [formIds.choices]: string[]
-    [formIds.displayAlpha]: SelectOption | null
+    [formIds.displayAlpha]: string | null
 }
 
 export type FormErrors = {
