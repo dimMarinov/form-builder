@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent, useCallback, ReactNode, Fragment } from 'react';
+import { useEffect, useState, ChangeEvent, useCallback, useRef, ReactNode, Fragment } from 'react';
 import './FormBuilder.css';
 import Input from '../../components/Input/Input';
 import Select from '../../components/Select/Select';
@@ -8,7 +8,7 @@ import Button from '../../components/Button/Button';
 import { SelectOption, FormData, FormErrors, FormBuilderConfig } from '../../types/types';
 import { formIds, localStorageKeys } from '../../constants/appConstants';
 import { form_builder_config } from '../../constants/formBuilderConfig';
-import { setItemToLocalStorage, removeFromLocalStorage } from '../../utils/utils';
+import { setItemToLocalStorage, removeFromLocalStorage, debounce } from '../../utils/utils';
 import fieldService from '../../services/formService';
 
 interface OwnProps {
@@ -24,6 +24,12 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
     });
     const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    // store reference to the debounce functio
+    const debouncedSetItemToLocalStorage = useRef(
+        debounce((key: string, value: string) => {
+            setItemToLocalStorage(key, value);
+        }, 500)
+    );
 
     useEffect(() => {
         setFormData(data);
@@ -75,20 +81,16 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
                 const { checked } = event.target as HTMLInputElement;
                 newData = { ...prevData, [name]: checked };
             } else if (event.target instanceof HTMLSelectElement) {
-                //if we need to pass the whole value
-                //const selectedValue = sortingtOptions.find(option => option.id === value);
-
                 newData = { ...prevData, [name]: value };
             } else if (event.target instanceof HTMLTextAreaElement) {
                 const choices = value.split('\n');
-
                 newData = { ...prevData, [name]: [...choices] };
             } else {
                 newData = { ...prevData, [name]: value };
             }
-            //we could add  debounce funcitonality for example here
-            //also we could make it when the user clicks outside of the form
-            setItemToLocalStorage(localStorageKeys.formData, JSON.stringify(newData));
+
+            debouncedSetItemToLocalStorage.current(localStorageKeys.formData, JSON.stringify(newData));
+
             return newData;
         });
     };
@@ -122,7 +124,7 @@ const FormBuilder = ({ sortingtOptions, data }: OwnProps) => {
             const data = await response.json();
             console.log("Save successful:", data);
         } catch (error) {
-            //do something with error
+            // Handle the error
         } finally {
             setLoading(false);
         }

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import './Button.css'; // Import the CSS file
+import './Button.css';
 
 export const ButtonEnums = {
     type: {
@@ -44,7 +44,7 @@ const Button = ({
             <div className="button-content" style={{ opacity: loading ? 0.5 : 1 }}>
                 {children}
             </div>
-            {loading && <span className="loading-spinner"></span>} {/* Show spinner when loading */}
+            {loading && <span className="loading-spinner"></span>}
         </button>
     );
 };
@@ -54,7 +54,7 @@ interface OwnProps {
     children?: ReactNode;
     onClick?: () => void;
     disabled?: boolean;
-    loading?: boolean; // Add loading as a prop
+    loading?: boolean;
     type?: keyof typeof ButtonEnums.type;
     variant?: keyof typeof ButtonEnums.variant;
     title?: string;
